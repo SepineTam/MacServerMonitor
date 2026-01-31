@@ -27,10 +27,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Start sampling coordinator
         SamplingCoordinator.shared.start()
+
+        // Start HTTP server
+        HttpServer.shared.start()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
         // Stop sampling coordinator
         SamplingCoordinator.shared.stop()
+
+        // Stop HTTP server
+        HttpServer.shared.stop()
     }
 }
