@@ -93,7 +93,7 @@ struct AlertStatus: Codable, Equatable {
 }
 
 /// Alert engine evaluates metrics and manages alert states
-final class AlertEngine {
+final class AlertEngine: ObservableObject {
     // MARK: - Singleton
     static let shared = AlertEngine()
 
@@ -101,6 +101,9 @@ final class AlertEngine {
         // Initialize alert states
         resetAllAlerts()
     }
+
+    // MARK: - Published State
+    @Published private(set) var isAnyAlertActive = false
 
     // MARK: - State
     private var alerts: [AlertType: AlertStatus] = [:]
@@ -149,8 +152,15 @@ final class AlertEngine {
             requiredConsecutive: requiredConsecutive
         )
 
+        // Update published state
+        updateIsAnyAlertActive()
+
         // Play sounds for any alerts that need it
         playAlerts()
+    }
+
+    private func updateIsAnyAlertActive() {
+        isAnyAlertActive = alerts.values.contains { $0.state.isActive }
     }
 
     /// Get all alert statuses

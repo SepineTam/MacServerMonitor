@@ -23,7 +23,7 @@ struct MetricSeries: Codable {
 }
 
 /// In-memory metrics store with ring buffers
-final class MetricStore {
+final class MetricStore: ObservableObject {
     // MARK: - Singleton
     static let shared = MetricStore()
 
@@ -38,11 +38,7 @@ final class MetricStore {
     }
 
     // MARK: - Latest Snapshot
-    private var _latestSnapshot: MetricsSnapshot?
-
-    var latestSnapshot: MetricsSnapshot? {
-        _latestSnapshot
-    }
+    @Published private(set) var latestSnapshot: MetricsSnapshot?
 
     // MARK: - Ring Buffers
     private var memoryBuffer: [Double] = []
@@ -54,7 +50,7 @@ final class MetricStore {
 
     /// Add a new snapshot to the store
     func addSnapshot(_ snapshot: MetricsSnapshot) {
-        _latestSnapshot = snapshot
+        latestSnapshot = snapshot
 
         // Add to ring buffers
         memoryBuffer.append(snapshot.memory.usedPercent)
@@ -103,7 +99,7 @@ final class MetricStore {
 
     /// Clear all stored data
     func clear() {
-        _latestSnapshot = nil
+        latestSnapshot = nil
         memoryBuffer.removeAll()
         cpuBuffer.removeAll()
         diskBuffer.removeAll()
