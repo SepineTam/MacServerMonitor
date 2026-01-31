@@ -1,6 +1,10 @@
 # MacServerMonitor
 Mac devices (as server) monitor.
 
+<p align="center">
+  <img src="Resources/MacServerMonitor_Logo.png" alt="MacServerMonitor Logo" width="200"/>
+</p>
+
 > **Note:** This project was developed with assistance from AI tools.
 
 MacServerMonitor is a lightweight monitoring panel designed for macOS devices that are used as long-running servers.
