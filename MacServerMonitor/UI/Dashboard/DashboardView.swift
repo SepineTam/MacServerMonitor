@@ -37,12 +37,14 @@ struct DashboardView: View {
             if let snapshot = store.latestSnapshot {
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Memory Card
-                        MetricCard(
+                        // Memory Card with trend
+                        let memoryTrend = store.getSeries(points: 20).memoryUsedPercent
+                        MetricCardWithTrend(
                             title: "Memory",
                             icon: "memorychip",
                             value: snapshot.memory.usedPercent,
                             unit: "%",
+                            trendData: memoryTrend,
                             isAlerting: alertEngine.getAlertStatus(for: .memory).state.isActive
                         ) {
                             VStack(alignment: .leading, spacing: 8) {
@@ -67,12 +69,14 @@ struct DashboardView: View {
                             .font(.caption)
                         }
 
-                        // CPU Card
-                        MetricCard(
+                        // CPU Card with trend
+                        let cpuTrend = store.getSeries(points: 20).cpuUsagePercent
+                        MetricCardWithTrend(
                             title: "CPU",
                             icon: "cpu",
                             value: snapshot.cpu.usagePercent,
                             unit: "%",
+                            trendData: cpuTrend,
                             isAlerting: alertEngine.getAlertStatus(for: .cpu).state.isActive
                         ) {
                             VStack(alignment: .leading, spacing: 8) {
@@ -95,12 +99,14 @@ struct DashboardView: View {
                             .font(.caption)
                         }
 
-                        // Disk Card
-                        MetricCard(
+                        // Disk Card with trend
+                        let diskTrend = store.getSeries(points: 20).diskUsedPercent
+                        MetricCardWithTrend(
                             title: "Disk",
                             icon: "internaldrive",
                             value: snapshot.disk.usedPercent,
                             unit: "%",
+                            trendData: diskTrend,
                             isAlerting: alertEngine.getAlertStatus(for: .disk).state.isActive
                         ) {
                             EmptyView()
