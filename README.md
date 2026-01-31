@@ -1,7 +1,7 @@
 # MacServerMonitor
-Mac devices (as server) monitor. 
+Mac devices (as server) monitor.
 
-> Notes: This project is made by AI including documents. 
+> **Note:** This project was developed with assistance from AI tools.
 
 MacServerMonitor is a lightweight monitoring panel designed for macOS devices that are used as long-running servers.
 
@@ -13,6 +13,17 @@ It focuses on a small set of critical system resources and provides:
 while keeping energy consumption and system overhead as low as possible.
 
 This project is intended for personal use, with a clean and extensible structure that makes future open-sourcing possible.
+
+## AI Tools Used
+
+This project was developed with assistance from the following AI tools:
+
+- **Code Generation:** [GLM-4.7](https://github.com/THUDM/GLM-4) by Zhipu AI
+- **AI Assistant Framework:** [Claude Code](https://claude.com/claude-code) by Anthropic
+- **Logo Design:** [Lovart.ai](https://lovart.ai) (powered by Nano Banana model)
+- **Documentation:** ChatGPT by OpenAI
+
+Special thanks to these AI tools for making this project possible.
 
 ---
 
