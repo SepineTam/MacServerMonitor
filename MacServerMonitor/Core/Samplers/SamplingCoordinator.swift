@@ -96,6 +96,9 @@ final class SamplingCoordinator {
 
         // Store snapshot
         MetricStore.shared.addSnapshot(snapshot)
+
+        // Evaluate alerts
+        AlertEngine.shared.evaluate(snapshot: snapshot)
     }
 
     /// Restart coordinator (e.g., when settings change)

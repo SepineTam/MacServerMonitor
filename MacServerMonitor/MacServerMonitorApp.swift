@@ -22,6 +22,9 @@ struct MacServerMonitorApp: App {
 /// App delegate to handle application lifecycle
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Initialize sound player
+        AlertEngine.shared.setSoundPlayer(SoundPlayer.shared)
+
         // Start sampling coordinator
         SamplingCoordinator.shared.start()
     }
