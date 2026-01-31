@@ -16,6 +16,7 @@ struct MacServerMonitorApp: App {
             ContentView()
         }
         .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 900, height: 700)
     }
 }
 

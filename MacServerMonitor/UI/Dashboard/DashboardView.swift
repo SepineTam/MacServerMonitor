@@ -151,7 +151,7 @@ struct DashboardView: View {
             .padding(.horizontal)
             .padding(.vertical, 8)
         }
-        .frame(minWidth: 800, minHeight: 600)
+        .frame(minWidth: 600, minHeight: 500)
         .sheet(isPresented: $showingSettings) {
             SettingsView()
         }
