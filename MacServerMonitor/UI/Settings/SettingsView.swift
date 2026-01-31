@@ -137,12 +137,19 @@ struct SettingsView: View {
                             HStack {
                                 Text("Port")
                                 Spacer()
-                                TextField("", value: $settings.httpServerPort, format: .number)
-                                    .textFieldStyle(.roundedBorder)
-                                    .frame(width: 80)
-                                    .onSubmit {
-                                        settings.saveHttpServerPort()
+                                TextField("", text: Binding(
+                                    get: { String(settings.httpServerPort) },
+                                    set: {
+                                        if let value = Int($0) {
+                                            settings.httpServerPort = value
+                                        }
                                     }
+                                ))
+                                .textFieldStyle(.roundedBorder)
+                                .frame(width: 80)
+                                .onSubmit {
+                                    settings.saveHttpServerPort()
+                                }
                             }
 
                             HStack {
