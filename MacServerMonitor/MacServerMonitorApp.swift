@@ -9,10 +9,25 @@ import SwiftUI
 
 @main
 struct MacServerMonitorApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
         .windowStyle(.hiddenTitleBar)
+    }
+}
+
+/// App delegate to handle application lifecycle
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Start sampling coordinator
+        SamplingCoordinator.shared.start()
+    }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        // Stop sampling coordinator
+        SamplingCoordinator.shared.stop()
     }
 }
