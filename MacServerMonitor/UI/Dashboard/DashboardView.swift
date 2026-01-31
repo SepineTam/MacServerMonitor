@@ -28,6 +28,7 @@ struct DashboardView: View {
                     Image(systemName: "gear")
                 }
                 .buttonStyle(.borderless)
+                .help("Settings (⌘,)")
             }
             .padding()
 
@@ -157,6 +158,9 @@ struct DashboardView: View {
         }
         .onReceive(timer) { _ in
             // Trigger view refresh
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .openSettings)) { _ in
+            showingSettings = true
         }
     }
 

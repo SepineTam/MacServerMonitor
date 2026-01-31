@@ -16,3 +16,7 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+
+extension Notification.Name {
+    static let openSettings = Notification.Name("openSettings")
+}
