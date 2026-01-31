@@ -58,21 +58,38 @@ This project is intended for personal use, with a clean and extensible structure
 
 ## Roadmap
 
-- [ ] Basic dashboard UI
-- [ ] Memory monitoring and visualization
-- [ ] CPU usage and load monitoring
-- [ ] Disk usage monitoring (percentage-based)
-- [ ] Network connectivity detection
-- [ ] Configurable alert thresholds
-- [ ] Sound alert system with throttling
-- [ ] Settings panel
-- [ ] Built-in HTTP API for LAN monitoring
-- [ ] Remote status JSON endpoint
-- [ ] Documentation and architecture notes
+- [x] Basic dashboard UI
+- [x] Memory monitoring and visualization
+- [x] CPU usage and load monitoring
+- [x] Disk usage monitoring (percentage-based)
+- [x] Network connectivity detection
+- [x] Configurable alert thresholds
+- [x] Sound alert system with throttling
+- [x] Settings panel
+- [x] Built-in HTTP API for LAN monitoring
+- [x] Remote status JSON endpoint
+- [x] Documentation and architecture notes
 
 ---
 
 ## Status
 
-This project is under active development and currently targets macOS only.
+✅ **v1.0 Complete** - All planned features implemented.
+
+This project targets macOS 13+ only.
+
+### Quick Start
+
+```bash
+# Build
+swift build
+
+# Run
+swift run
+
+# Build release app
+swift build -c release
+
+# The packaged app will be at: build/MacServerMonitor.app
+```
 
