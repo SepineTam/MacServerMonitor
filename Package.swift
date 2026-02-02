@@ -17,7 +17,7 @@ let package = Package(
             name: "MacServerMonitor",
             path: "MacServerMonitor",
             linkerSettings: [
-                .unsafeFlags(["-framework", "SwiftUI", "-framework", "AppKit"])
+                .unsafeFlags(["-framework", "SwiftUI", "-framework", "AppKit", "-framework", "Network"])
             ]
         )
     ]

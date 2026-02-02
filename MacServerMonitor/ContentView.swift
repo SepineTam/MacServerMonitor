@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        DashboardView()
+        MultiDeviceDashboardView()
     }
 }
 
@@ -19,4 +19,5 @@ struct ContentView: View {
 
 extension Notification.Name {
     static let openSettings = Notification.Name("openSettings")
+    static let openDevices = Notification.Name("openDevices")
 }

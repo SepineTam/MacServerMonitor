@@ -26,6 +26,13 @@ struct MacServerMonitorApp: App {
                 }
                 .keyboardShortcut(",", modifiers: .command)
             }
+
+            CommandMenu("Devices") {
+                Button("Device Manager...") {
+                    NotificationCenter.default.post(name: .openDevices, object: nil)
+                }
+                .keyboardShortcut("d", modifiers: .command)
+            }
         }
     }
 }
@@ -44,6 +51,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Start HTTP server
         HttpServer.shared.start()
+
+        // Start device discovery
+        SimpleDeviceDiscovery.shared.startDiscovery()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
