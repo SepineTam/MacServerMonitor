@@ -9,7 +9,10 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var settings = SettingsStore.shared
+    @StateObject private var silenceManager = AlertSilenceManager.shared
     @Environment(\.dismiss) private var dismiss
+
+    @State private var showingSilenceSettings = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -123,6 +126,28 @@ struct SettingsView: View {
                                     settings.saveAlertRepeatMinutes()
                                 }
                             }
+
+                            Divider()
+
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Alert Silence")
+                                        .font(.subheadline)
+
+                                    if silenceManager.isSilenced {
+                                        Text("告警已静默")
+                                            .font(.caption)
+                                            .foregroundStyle(.orange)
+                                    }
+                                }
+
+                                Spacer()
+
+                                Button("设置...") {
+                                    showingSilenceSettings = true
+                                }
+                                .controlSize(.small)
+                            }
                         }
                     }
 
@@ -212,6 +237,9 @@ struct SettingsView: View {
         }
         .frame(width: 600, height: 700)
         .padding()
+        .sheet(isPresented: $showingSilenceSettings) {
+            AlertSilenceSettingsView()
+        }
     }
 }
 

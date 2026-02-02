@@ -110,7 +110,7 @@ final class AlertEngine: ObservableObject {
     private var alerts: [AlertType: AlertStatus] = [:]
     private var soundPlayer: SoundPlayer?
     private var alertHistoryManager = AlertHistoryManager.shared
-    private var previousAlertStates: [AlertType: Bool] = [:]
+    private var silenceManager = AlertSilenceManager.shared
 
     // MARK: - Public Methods
 
@@ -305,6 +305,11 @@ final class AlertEngine: ObservableObject {
 
     private func playAlerts() {
         guard let soundPlayer = soundPlayer else { return }
+
+        // Check if alerts are silenced
+        if silenceManager.shouldSilence() {
+            return
+        }
 
         let now = Date().timeIntervalSince1970
 
