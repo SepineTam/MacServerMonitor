@@ -79,10 +79,16 @@ cd build
 zip -r MacServerMonitor-$VERSION.zip MacServerMonitor.app
 cd ..
 
+# 创建 DMG 安装包
+echo "💿 创建 DMG 安装包..."
+./create-dmg.sh $VERSION
+
 echo ""
 echo "✅ 构建完成！"
 echo "📍 .app 位置: build/MacServerMonitor.app"
 echo "📍 ZIP 位置: build/MacServerMonitor-$VERSION.zip"
+echo "📍 DMG 位置: build/MacServerMonitor-$VERSION.dmg"
 echo ""
-echo "💡 提示：你可以直接双击 build/MacServerMonitor.app 来运行应用"
-echo "💡 或者使用: open build/MacServerMonitor.app"
+echo "💡 提示："
+echo "  - 双击 build/MacServerMonitor.app 来运行应用"
+echo "  - 或者双击 DMG 文件进行安装"

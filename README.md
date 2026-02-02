@@ -128,6 +128,24 @@ A build script is provided to create a properly packaged `.app` bundle:
 The output will be:
 - `build/MacServerMonitor.app` - The macOS application bundle
 - `build/MacServerMonitor-VERSION.zip` - ZIP archive for distribution
+- `build/MacServerMonitor-VERSION.dmg` - DMG disk image for easy installation
+
+### Installation
+
+Two installation methods are provided:
+
+#### Method 1: DMG (Recommended)
+
+1. Download `MacServerMonitor-VERSION.dmg`
+2. Double-click the DMG to mount it
+3. Drag `MacServerMonitor.app` to the `Applications` folder shortcut
+4. Eject the DMG
+
+#### Method 2: ZIP
+
+1. Download `MacServerMonitor-VERSION.zip`
+2. Extract the ZIP file
+3. Move `MacServerMonitor.app` to your `Applications` folder
 
 ### Automated Releases
 
@@ -138,8 +156,8 @@ This project uses GitHub Actions to automatically build and release macOS apps w
 3. The GitHub Action will automatically:
    - Build the app
    - Package it as a `.app` bundle
-   - Create a ZIP archive
-   - Upload it to the release page
+   - Create both ZIP and DMG archives
+   - Upload them to the release page
 
-Users can then download the ZIP from the Releases page.
+Users can then download either the ZIP or DMG from the Releases page.
 

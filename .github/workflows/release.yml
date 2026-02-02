@@ -12,14 +12,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build macOS app
+      - name: Build macOS app (ZIP and DMG)
         run: ./build.sh ${{ github.event.release.tag_name }}
 
-      - name: Upload macOS build artifact
+      - name: Upload ZIP artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MacServerMonitor-macOS
+          name: MacServerMonitor-ZIP
           path: build/MacServerMonitor-${{ github.event.release.tag_name }}.zip
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacServerMonitor-DMG
+          path: build/MacServerMonitor-${{ github.event.release.tag_name }}.dmg
 
   upload:
     name: Upload to Release
@@ -39,6 +45,8 @@ jobs:
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: MacServerMonitor-macOS/*.*
+          files: |
+            MacServerMonitor-ZIP/*.*
+            MacServerMonitor-DMG/*.*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
