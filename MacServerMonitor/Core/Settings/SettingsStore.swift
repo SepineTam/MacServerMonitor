@@ -10,6 +10,7 @@ import Combine
 
 /// Settings keys - internal to prevent typos
 private enum SettingsKey: String {
+    case theme = "app_theme"
     case refreshIntervalSeconds = "refresh_interval_seconds"
     case memoryThresholdPercent = "memory_threshold_percent"
     case cpuThresholdPercent = "cpu_threshold_percent"
@@ -28,6 +29,9 @@ final class SettingsStore: ObservableObject {
     static let shared = SettingsStore()
 
     private let defaults: UserDefaults
+
+    // MARK: - Theme Settings
+    @Published var theme: AppTheme
 
     // MARK: - Refresh Settings
     @Published var refreshIntervalSeconds: Int
@@ -50,6 +54,14 @@ final class SettingsStore: ObservableObject {
 
     private init(userDefaults: UserDefaults = .standard) {
         self.defaults = userDefaults
+
+        // Initialize theme
+        if let themeRaw = userDefaults.string(forKey: SettingsKey.theme.rawValue),
+           let theme = AppTheme(rawValue: themeRaw) {
+            self.theme = theme
+        } else {
+            self.theme = .light
+        }
 
         // Initialize from UserDefaults or use defaults
         let refreshInterval = userDefaults.integer(forKey: SettingsKey.refreshIntervalSeconds.rawValue)
@@ -96,6 +108,7 @@ final class SettingsStore: ObservableObject {
     /// Get current settings as AppSettings struct
     var currentSettings: AppSettings {
         AppSettings(
+            theme: theme,
             refreshIntervalSeconds: refreshIntervalSeconds,
             memoryThresholdPercent: memoryThresholdPercent,
             cpuThresholdPercent: cpuThresholdPercent,
@@ -117,6 +130,7 @@ final class SettingsStore: ObservableObject {
     /// Reset all settings to defaults
     func resetToDefaults() {
         let defaults = AppSettings.default
+        theme = defaults.theme
         refreshIntervalSeconds = defaults.refreshIntervalSeconds
         memoryThresholdPercent = defaults.memoryThresholdPercent
         cpuThresholdPercent = defaults.cpuThresholdPercent
@@ -132,6 +146,8 @@ final class SettingsStore: ObservableObject {
 
     /// Sync current values to UserDefaults
     func sync() {
+        defaults.set(theme.rawValue, forKey: SettingsKey.theme.rawValue)
+
         let validValues = [5, 10, 30]
         defaults.set(validValues.contains(refreshIntervalSeconds) ? refreshIntervalSeconds : 5,
                      forKey: SettingsKey.refreshIntervalSeconds.rawValue)
@@ -197,5 +213,10 @@ final class SettingsStore: ObservableObject {
     func saveHttpServerPort() {
         defaults.set(max(1024, min(65535, httpServerPort)),
                      forKey: SettingsKey.httpServerPort.rawValue)
+    }
+
+    func saveTheme() {
+        defaults.set(theme.rawValue, forKey: SettingsKey.theme.rawValue)
+        ThemeManager.shared.currentTheme = theme
     }
 }

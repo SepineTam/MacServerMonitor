@@ -10,10 +10,12 @@ import SwiftUI
 @main
 struct MacServerMonitorApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject private var themeManager = ThemeManager.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .preferredColorScheme(themeManager.colorScheme)
         }
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 900, height: 700)
@@ -31,6 +33,9 @@ struct MacServerMonitorApp: App {
 /// App delegate to handle application lifecycle
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Apply theme
+        ThemeManager.shared.applyTheme(ThemeManager.shared.currentTheme)
+
         // Initialize sound player
         AlertEngine.shared.setSoundPlayer(SoundPlayer.shared)
 

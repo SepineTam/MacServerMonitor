@@ -21,6 +21,25 @@ struct SettingsView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
+                    // Appearance Section
+                    GroupBox(label: Label("Appearance", systemImage: "paintbrush")) {
+                        HStack {
+                            Text("Theme")
+                            Spacer()
+                            Picker("", selection: $settings.theme) {
+                                ForEach(AppTheme.allCases) { theme in
+                                    Label(theme.displayName, systemImage: theme.icon)
+                                        .tag(theme)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .frame(width: 200)
+                            .onChange(of: settings.theme) { _ in
+                                settings.saveTheme()
+                            }
+                        }
+                    }
+
                     // Refresh Settings Section
                     GroupBox(label: Label("Refresh", systemImage: "clock")) {
                         Picker("Interval", selection: $settings.refreshIntervalSeconds) {

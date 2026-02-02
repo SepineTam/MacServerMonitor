@@ -9,6 +9,9 @@ import Foundation
 
 /// Application settings configuration
 struct AppSettings {
+    // MARK: - Theme Settings
+    var theme: AppTheme
+
     // MARK: - Refresh Settings
     var refreshIntervalSeconds: Int
 
@@ -31,6 +34,7 @@ struct AppSettings {
 
     // MARK: - Defaults
     static let `default` = AppSettings(
+        theme: .light,
         refreshIntervalSeconds: 5,
         memoryThresholdPercent: 85.0,
         cpuThresholdPercent: 90.0,
