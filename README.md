@@ -102,9 +102,44 @@ swift build
 # Run
 swift run
 
-# Build release app
-swift build -c release
+# Build release app (recommended way)
+./build.sh 1.0.0
 
 # The packaged app will be at: build/MacServerMonitor.app
+# The ZIP archive will be at: build/MacServerMonitor-1.0.0.zip
 ```
+
+### Building for Release
+
+A build script is provided to create a properly packaged `.app` bundle:
+
+```bash
+# Build with version number
+./build.sh 1.0.0
+
+# The script will:
+# 1. Clean previous builds
+# 2. Compile the app in release mode
+# 3. Create MacServerMonitor.app with proper structure
+# 4. Include app icon and metadata
+# 5. Create a ZIP archive ready for distribution
+```
+
+The output will be:
+- `build/MacServerMonitor.app` - The macOS application bundle
+- `build/MacServerMonitor-VERSION.zip` - ZIP archive for distribution
+
+### Automated Releases
+
+This project uses GitHub Actions to automatically build and release macOS apps when you create a new release:
+
+1. Create a new tag and push it to GitHub
+2. Create a GitHub Release using that tag
+3. The GitHub Action will automatically:
+   - Build the app
+   - Package it as a `.app` bundle
+   - Create a ZIP archive
+   - Upload it to the release page
+
+Users can then download the ZIP from the Releases page.
 
