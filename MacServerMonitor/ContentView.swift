@@ -20,4 +20,5 @@ struct ContentView: View {
 extension Notification.Name {
     static let openSettings = Notification.Name("openSettings")
     static let openDevices = Notification.Name("openDevices")
+    static let openAlertHistory = Notification.Name("openAlertHistory")
 }

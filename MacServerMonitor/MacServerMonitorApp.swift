@@ -33,6 +33,13 @@ struct MacServerMonitorApp: App {
                 }
                 .keyboardShortcut("d", modifiers: .command)
             }
+
+            CommandMenu("Alerts") {
+                Button("Alert History...") {
+                    NotificationCenter.default.post(name: .openAlertHistory, object: nil)
+                }
+                .keyboardShortcut("h", modifiers: .command)
+            }
         }
     }
 }

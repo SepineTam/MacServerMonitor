@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import SwiftUI
 
 /// Alert types
-enum AlertType: String, CaseIterable {
+enum AlertType: String, CaseIterable, Codable {
     case memory = "memory"
     case cpu = "cpu"
     case disk = "disk"
@@ -108,6 +109,8 @@ final class AlertEngine: ObservableObject {
     // MARK: - State
     private var alerts: [AlertType: AlertStatus] = [:]
     private var soundPlayer: SoundPlayer?
+    private var alertHistoryManager = AlertHistoryManager.shared
+    private var previousAlertStates: [AlertType: Bool] = [:]
 
     // MARK: - Public Methods
 
@@ -119,6 +122,12 @@ final class AlertEngine: ObservableObject {
     /// Evaluate metrics and update alert states
     @MainActor
     func evaluate(snapshot: MetricsSnapshot) {
+        evaluate(snapshot: snapshot, deviceId: UUID(), deviceName: "本地设备")
+    }
+
+    /// Evaluate metrics for a specific device
+    @MainActor
+    func evaluate(snapshot: MetricsSnapshot, deviceId: UUID, deviceName: String) {
         let settings = SettingsStore.shared
         let requiredConsecutive = settings.consecutiveSamplesToTrigger
 
@@ -127,7 +136,9 @@ final class AlertEngine: ObservableObject {
             type: .memory,
             value: snapshot.memory.usedPercent,
             threshold: settings.memoryThresholdPercent,
-            requiredConsecutive: requiredConsecutive
+            requiredConsecutive: requiredConsecutive,
+            deviceId: deviceId,
+            deviceName: deviceName
         )
 
         // Evaluate CPU
@@ -135,7 +146,9 @@ final class AlertEngine: ObservableObject {
             type: .cpu,
             value: snapshot.cpu.usagePercent,
             threshold: settings.cpuThresholdPercent,
-            requiredConsecutive: requiredConsecutive
+            requiredConsecutive: requiredConsecutive,
+            deviceId: deviceId,
+            deviceName: deviceName
         )
 
         // Evaluate disk
@@ -143,13 +156,17 @@ final class AlertEngine: ObservableObject {
             type: .disk,
             value: snapshot.disk.usedPercent,
             threshold: settings.diskThresholdPercent,
-            requiredConsecutive: requiredConsecutive
+            requiredConsecutive: requiredConsecutive,
+            deviceId: deviceId,
+            deviceName: deviceName
         )
 
         // Evaluate network
         evaluateNetwork(
             status: snapshot.network.status,
-            requiredConsecutive: requiredConsecutive
+            requiredConsecutive: requiredConsecutive,
+            deviceId: deviceId,
+            deviceName: deviceName
         )
 
         // Update published state
@@ -182,7 +199,7 @@ final class AlertEngine: ObservableObject {
 
     // MARK: - Private Methods
 
-    private func evaluateMetric(type: AlertType, value: Double, threshold: Double, requiredConsecutive: Int) {
+    private func evaluateMetric(type: AlertType, value: Double, threshold: Double, requiredConsecutive: Int, deviceId: UUID, deviceName: String) {
         guard var alertStatus = alerts[type] else {
             alerts[type] = AlertStatus(type: type)
             return
@@ -199,9 +216,17 @@ final class AlertEngine: ObservableObject {
 
                 switch alertStatus.state {
                 case .normal:
-                    // First time entering alert state
+                    // First time entering alert state - record to history
                     alertStatus.state = .alerting(since: now)
                     alertStatus.nextSoundTime = now
+
+                    alertHistoryManager.recordAlert(
+                        deviceId: deviceId,
+                        deviceName: deviceName,
+                        type: type,
+                        value: value,
+                        threshold: threshold
+                    )
 
                 case .alerting, .throttled:
                     // Already in alert state, check if we need to throttle
@@ -217,8 +242,9 @@ final class AlertEngine: ObservableObject {
         } else {
             // Value recovered
             if alertStatus.state.isActive {
-                // Recovered from alert
+                // Recovered from alert - resolve in history
                 alertStatus.state = .normal
+                alertHistoryManager.resolveAlerts(deviceId: deviceId, type: type)
             }
             alertStatus.consecutiveViolations = 0
             alertStatus.nextSoundTime = nil
@@ -227,7 +253,7 @@ final class AlertEngine: ObservableObject {
         alerts[type] = alertStatus
     }
 
-    private func evaluateNetwork(status: NetworkStatus, requiredConsecutive: Int) {
+    private func evaluateNetwork(status: NetworkStatus, requiredConsecutive: Int, deviceId: UUID, deviceName: String) {
         guard var alertStatus = alerts[.network] else {
             alerts[.network] = AlertStatus(type: .network)
             return
@@ -243,8 +269,17 @@ final class AlertEngine: ObservableObject {
 
                 switch alertStatus.state {
                 case .normal:
+                    // First time entering alert state - record to history
                     alertStatus.state = .alerting(since: now)
                     alertStatus.nextSoundTime = now
+
+                    alertHistoryManager.recordAlert(
+                        deviceId: deviceId,
+                        deviceName: deviceName,
+                        type: .network,
+                        value: 0,
+                        threshold: 0
+                    )
 
                 case .alerting, .throttled:
                     if let nextTime = alertStatus.nextSoundTime, now >= nextTime {
@@ -256,9 +291,10 @@ final class AlertEngine: ObservableObject {
                 }
             }
         } else {
-            // Network recovered
+            // Network recovered - resolve in history
             if alertStatus.state.isActive {
                 alertStatus.state = .normal
+                alertHistoryManager.resolveAlerts(deviceId: deviceId, type: .network)
             }
             alertStatus.consecutiveViolations = 0
             alertStatus.nextSoundTime = nil

@@ -22,8 +22,10 @@ enum ViewMode: String, CaseIterable {
 struct MultiDeviceDashboardView: View {
     @StateObject private var registry = DeviceRegistry.shared
     @StateObject private var alertEngine = AlertEngine.shared
+    @StateObject private var historyManager = AlertHistoryManager.shared
     @State private var showingSettings = false
     @State private var showingDevices = false
+    @State private var showingAlertHistory = false
     @State private var selectedDeviceId: UUID?
     @State private var viewMode: ViewMode = .card
 
@@ -55,6 +57,21 @@ struct MultiDeviceDashboardView: View {
                 }
                 .buttonStyle(.borderless)
                 .help("Device Manager (⌘D)")
+
+                Button(action: { showingAlertHistory = true }) {
+                    ZStack(alignment: .topTrailing) {
+                        Image(systemName: "bell")
+
+                        if alertEngine.isAnyAlertActive {
+                            Circle()
+                                .fill(Color.red)
+                                .frame(width: 8, height: 8)
+                                .offset(x: 4, y: -4)
+                        }
+                    }
+                }
+                .buttonStyle(.borderless)
+                .help("Alert History (⌘H)")
 
                 Button(action: { showingSettings = true }) {
                     Image(systemName: "gear")
@@ -93,11 +110,17 @@ struct MultiDeviceDashboardView: View {
         .sheet(isPresented: $showingDevices) {
             DeviceManagerView()
         }
+        .sheet(isPresented: $showingAlertHistory) {
+            AlertHistoryView()
+        }
         .onReceive(timer) { _ in
             // Trigger view refresh
         }
         .onReceive(NotificationCenter.default.publisher(for: .openDevices)) { _ in
             showingDevices = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .openAlertHistory)) { _ in
+            showingAlertHistory = true
         }
     }
 
