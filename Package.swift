@@ -16,6 +16,7 @@ let package = Package(
         .executableTarget(
             name: "MacServerMonitor",
             path: "MacServerMonitor",
+            exclude: ["Info.plist"],
             linkerSettings: [
                 .unsafeFlags(["-framework", "SwiftUI", "-framework", "AppKit", "-framework", "Network"])
             ]

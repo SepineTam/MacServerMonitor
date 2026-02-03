@@ -38,13 +38,10 @@ final class MemorySampler {
 
         // Calculate used memory
         let pageSize = UInt64(vm_page_size)
-        let freePages = UInt64(stats.free_count)
-        let inactivePages = UInt64(stats.inactive_count)
         let activePages = UInt64(stats.active_count)
         let wiredPages = UInt64(stats.wire_count)
         let compressedPages = UInt64(stats.compressor_page_count)
 
-        let freeBytes = freePages * pageSize
         let usedBytes = (activePages + wiredPages) * pageSize
         let compressedBytes = compressedPages * pageSize
         let usedPercent = Double(usedBytes) / Double(totalMemory) * 100

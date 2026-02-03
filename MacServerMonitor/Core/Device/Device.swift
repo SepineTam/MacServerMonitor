@@ -101,7 +101,7 @@ struct LocalDeviceInfo {
 
     private init() {
         // Get hostname
-        var size = Int(MAXHOSTNAMELEN)
+        let size = Int(MAXHOSTNAMELEN)
         var hostnameBuffer = [CChar](repeating: 0, count: Int(MAXHOSTNAMELEN))
         gethostname(&hostnameBuffer, size)
         self.hostname = String(cString: hostnameBuffer)

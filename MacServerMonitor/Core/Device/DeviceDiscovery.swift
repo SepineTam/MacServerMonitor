@@ -52,7 +52,7 @@ final class SimpleDeviceDiscovery: ObservableObject {
         request.timeoutInterval = 2
 
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-            guard let self = self else { return }
+            guard self != nil else { return }
 
             if error == nil,
                let httpResponse = response as? HTTPURLResponse,
